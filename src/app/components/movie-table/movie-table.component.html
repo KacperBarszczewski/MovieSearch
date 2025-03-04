@@ -7,10 +7,15 @@
             class="text-custom-topography  hover:!bg-custom-topography hover:text-custom-bg"> {{column}} </th>
 
         @if(column==='Poster') {
-        <td mat-cell *matCellDef="let movie"> <img src="{{movie[column]}}" alt="{{movie.Title}}" class="w-20 h-20">
+        <td mat-cell *matCellDef="let movie">
+            <img src="{{movie[column]}}" alt="{{movie.Title}}" class="w-full object-cover" />
         </td>
         } @else {
-        <td mat-cell *matCellDef="let movie" class="text-custom-topography"> {{movie[column]}} </td>
+        <td mat-cell *matCellDef="let movie" class="text-custom-topography ">
+            <div class="text-xs overflow-hidden max-h-24">
+                {{movie[column] }}
+            </div>
+        </td>
         }
     </ng-container>
     }
@@ -23,6 +28,4 @@
     ::ng-deep .mat-sort-header-arrow {
         color: white !important;
     }
-
-
 </style>

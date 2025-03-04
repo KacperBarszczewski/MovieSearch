@@ -1,8 +1,11 @@
-<div class="flex items-center w-screen m-4">
-    <div>
-        <div class="mb-5">
+<div class="flex justify-center max-w-screen m-4 ">
+    <div class="sm:w-1/2">
+        <div class="mb-5 w-full p-2">
             <app-movie-search></app-movie-search>
         </div>
-        <app-movie-table></app-movie-table>
+        <div class="max-w-screen  max-h-screen not-sm:overflow-auto">
+            <app-movie-table></app-movie-table>
+        </div>
+        
     </div>
 </div>
