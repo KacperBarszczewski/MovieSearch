@@ -6,6 +6,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MovieService } from "../../services/movie.service";
 import { Observable } from "rxjs/internal/Observable";
+import { MatPaginator, MatPaginatorModule } from "@angular/material/paginator";
 
 const sampleMovies: Movie[] = [
   {
@@ -39,18 +40,23 @@ const sampleMovies: Movie[] = [
 
 @Component({
   selector: 'app-movie-table',
-  imports: [MatTableModule, MatSortModule, CommonModule, DragDropModule,],
+  imports: [MatTableModule, MatSortModule, CommonModule, DragDropModule,MatPaginatorModule],
   templateUrl: './movie-table.component.html'
 })
 export class MovieTableComponent implements AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+  numberMoves$: Observable<number> = new Observable<number>();
   movies$: Observable<Movie[]> = new Observable<Movie[]>();
+
   displayedColumns: (keyof Movie)[] = ['Poster', 'Title', 'Year', 'Runtime', 'Genre', 'Director', 'Plot'];
   dataSource = new MatTableDataSource<Movie>([]);
+  numberMoves: number = 0;
 
   constructor(private readonly movieService: MovieService) {
     this.movies$ = this.movieService.movies$;
+    this.numberMoves$ = this.movieService.numberMoves$;
   }
   
   ngAfterViewInit() {
@@ -59,10 +65,18 @@ export class MovieTableComponent implements AfterViewInit {
     this.movies$.subscribe(movies => {
       this.dataSource.data = movies;
     });
+
+    this.numberMoves$.subscribe(numberMoves => {
+      this.numberMoves = numberMoves;
+    });
   }
 
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.displayedColumns, event.previousIndex, event.currentIndex);
+  }
+
+  pageChanged(event: {pageIndex:number}): void {
+    console.log('Page event', event); 
   }
 
 }

@@ -24,6 +24,10 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
 
+<mat-paginator class="!bg-custom-topography mt-4" [length]="numberMoves" [pageSize]="10"
+    (page)="pageChanged($event)">
+</mat-paginator>
+
 <style>
     ::ng-deep .mat-sort-header-arrow {
         color: white !important;
