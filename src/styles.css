@@ -1,4 +1,20 @@
 @import "tailwindcss";
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+@theme {
+    --color-custom-grey: rgb(220, 215, 201);
+    --color-custom-brown: rgb(162, 123, 92);
+    --color-custom-green: rgb(63, 79, 68);
+    --color-custom-dark-green: rgb(44, 57, 48);
+}
+
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
