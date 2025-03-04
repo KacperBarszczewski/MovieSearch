@@ -1,17 +1,16 @@
-<table mat-table [dataSource]="dataSource" matSort
-    class="mat-elevation-z8 w-full !bg-custom-brown !border !border-custom-green" cdkDropList
+<table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 w-full !bg-transparent" cdkDropList
     cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)">
 
     @for (column of displayedColumns; track $index) {
     <ng-container matColumnDef="{{column}}">
         <th mat-header-cell *matHeaderCellDef mat-sort-header cdkDrag
-            class="text-custom-dark-green hover:!bg-custom-green hover:text-custom-grey "> {{column}} </th>
+            class="text-custom-topography  hover:!bg-custom-topography hover:text-custom-bg"> {{column}} </th>
 
         @if(column==='Poster') {
         <td mat-cell *matCellDef="let movie"> <img src="{{movie[column]}}" alt="{{movie.Title}}" class="w-20 h-20">
         </td>
         } @else {
-        <td mat-cell *matCellDef="let movie" class="text-custom-dark-green"> {{movie[column]}} </td>
+        <td mat-cell *matCellDef="let movie" class="text-custom-topography"> {{movie[column]}} </td>
         }
     </ng-container>
     }

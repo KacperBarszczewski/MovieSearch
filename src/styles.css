@@ -2,10 +2,10 @@
 
 
 @theme {
-    --color-custom-grey: rgb(220, 215, 201);
-    --color-custom-brown: rgb(162, 123, 92);
-    --color-custom-green: rgb(63, 79, 68);
-    --color-custom-dark-green: rgb(44, 57, 48);
+    --color-custom-bg: rgb(220, 215, 201);
+    --color-custom-topography: oklch(0.216 0.006 56.043);
+    --color-custom-primary: oklch(0.872 0.01 258.338);
+    --color-custom-secendery: oklch(0.879 0.169 91.605);
 }
 
 
