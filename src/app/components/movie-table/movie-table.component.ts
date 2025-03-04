@@ -1,10 +1,11 @@
 import { CommonModule } from "@angular/common";
-import { Component, AfterViewInit, inject, ViewChild } from "@angular/core";
+import { Component, AfterViewInit, ViewChild, Input } from "@angular/core";
 import { Movie } from "../../models/movie";
-import {MatSort, Sort, MatSortModule} from '@angular/material/sort';
-import {MatTableDataSource, MatTableModule} from '@angular/material/table';
-import {LiveAnnouncer} from '@angular/cdk/a11y';
-import {CdkDragDrop, DragDropModule, moveItemInArray} from '@angular/cdk/drag-drop';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { MovieService } from "../../services/movie.service";
+import { Observable } from "rxjs/internal/Observable";
 
 const sampleMovies: Movie[] = [
   {
@@ -38,36 +39,30 @@ const sampleMovies: Movie[] = [
 
 @Component({
   selector: 'app-movie-table',
-  imports: [MatTableModule, MatSortModule, CommonModule,DragDropModule],
+  imports: [MatTableModule, MatSortModule, CommonModule, DragDropModule,],
   templateUrl: './movie-table.component.html'
 })
 export class MovieTableComponent implements AfterViewInit {
-  private _liveAnnouncer = inject(LiveAnnouncer);
-  
-  displayedColumns: (keyof Movie)[] = ['Poster', 'Title', 'Year', 'Runtime', 'Genre', 'Director', 'Plot'];
-  dataSource = new MatTableDataSource(sampleMovies);
-  sampleMovies = sampleMovies;
-
-  drop(event: CdkDragDrop<string[]>) {
-    // const prevActive = this.tabs[this.selectedTabIndex];
-    moveItemInArray(this.displayedColumns, event.previousIndex, event.currentIndex);
-    // this.selectedTabIndex = this.tabs.indexOf(prevActive);
-  }
-
-
-
   @ViewChild(MatSort) sort!: MatSort;
 
+  movies$: Observable<Movie[]> = new Observable<Movie[]>();
+  displayedColumns: (keyof Movie)[] = ['Poster', 'Title', 'Year', 'Runtime', 'Genre', 'Director', 'Plot'];
+  dataSource = new MatTableDataSource<Movie>([]);
+
+  constructor(private readonly movieService: MovieService) {
+    this.movies$ = this.movieService.movies$;
+  }
+  
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
+
+    this.movies$.subscribe(movies => {
+      this.dataSource.data = movies;
+    });
   }
 
-  announceSortChange(sortState: Sort) {
-    if (sortState.direction) {
-      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-    } else {
-      this._liveAnnouncer.announce('Sorting cleared');
-    }
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.displayedColumns, event.previousIndex, event.currentIndex);
   }
 
 }
