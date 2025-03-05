@@ -47,7 +47,15 @@ export class MovieService {
         return forkJoin(detailsRequests);
       }),
       finalize(() => this.movieStateSubject.next({ ...this.movieStateSubject.value, loading: false }))
-    ).subscribe(movies => this.movieStateSubject.next({ ...this.movieStateSubject.value, movies }));
+    ).subscribe({
+      next: (movies) => {
+        this.movieStateSubject.next({ ...this.movieStateSubject.value, movies })
+      },
+      error: (err) => {
+        console.error(err);
+      },
+
+    });
   }
 
 }
