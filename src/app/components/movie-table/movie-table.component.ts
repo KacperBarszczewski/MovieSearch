@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, AfterViewInit, ViewChild, Input } from "@angular/core";
+import { Component, AfterViewInit, ViewChild } from "@angular/core";
 import { Movie } from "../../models/movie";
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';

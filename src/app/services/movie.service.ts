@@ -36,7 +36,7 @@ export class MovieService {
 
     this.http.get<MovieSearchResponse>(`${this.apiUrl}?s=${query}&apikey=${this.apiKey}&page=${page}`).pipe(
       map(response => {
-        this.movieStateSubject.next({...this.movieStateSubject.value, numberOfMovies: parseInt(response.totalResults)});
+        this.movieStateSubject.next({ ...this.movieStateSubject.value, numberOfMovies: parseInt(response.totalResults) });
         return response.Search || []
       }),
       switchMap(movies => {
@@ -45,8 +45,8 @@ export class MovieService {
         );
         return forkJoin(detailsRequests);
       }),
-      finalize(() =>  this.movieStateSubject.next({...this.movieStateSubject.value,loading: false}))
-    ).subscribe(movies => this.movieStateSubject.next({...this.movieStateSubject.value,movies}));
+      finalize(() => this.movieStateSubject.next({ ...this.movieStateSubject.value, loading: false }))
+    ).subscribe(movies => this.movieStateSubject.next({ ...this.movieStateSubject.value, movies }));
   }
 
 }
