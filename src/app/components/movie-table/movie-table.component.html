@@ -1,0 +1,46 @@
+<div class="max-w-screen not-sm:overflow-auto">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 w-full !bg-transparent" cdkDropList
+        cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)">
+
+        @for (column of displayedColumns; track $index) {
+        <ng-container matColumnDef="{{column}}">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header cdkDrag
+                class="text-custom-topography  hover:!bg-custom-topography hover:text-custom-bg"> {{column}} </th>
+
+            @if(column==='Poster') {
+            <td mat-cell *matCellDef="let movie" class="">
+                <div class="w-24 h-36 flex justify-center items-center bg-black">
+
+                    @if(movie[column] === 'N/A') {
+                    <span class="flex justify-center items-center p-1">{{movie.Title}}</span>
+                    }@else {
+                    <img src="{{movie[column]}}" alt="{{movie.Title}}" class="w-24 h-36 object-cover" />
+                    }
+
+                </div>
+            </td>
+            } @else {
+            <td mat-cell *matCellDef="let movie" class="text-custom-topography ">
+                <div class="text-xs overflow-hidden max-h-24">
+                    {{movie[column] }}
+                </div>
+            </td>
+            }
+        </ng-container>
+        }
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>
+
+
+<mat-paginator class="!bg-custom-topography mt-4" [length]="(movieState$ | async)?.numberOfMovies" [pageSize]="10"
+    [pageIndex]="((movieState$ | async)?.pageIndex??1) - 1" (page)="pageChanged($event)">
+</mat-paginator>
+
+<style>
+    ::ng-deep .mat-sort-header-arrow {
+        color: white !important;
+    }
+</style>
