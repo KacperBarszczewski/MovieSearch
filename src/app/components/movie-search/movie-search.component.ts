@@ -1,27 +1,23 @@
 import { Component } from '@angular/core';
 import { MovieService } from '../../services/movie.service';
-import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-movie-search',
-  imports: [],
+  imports: [ReactiveFormsModule],
   templateUrl: './movie-search.component.html'
 })
 export class MovieSearchComponent {
-  private searchSubject = new Subject<string>();
+  searchControl = new FormControl('');
 
-  constructor(private readonly movieService: MovieService) { }
-
-  ngAfterViewInit() {
-    this.searchSubject.pipe(
+  constructor(private readonly movieService: MovieService) {
+    this.searchControl.valueChanges.pipe(
       debounceTime(800),
       distinctUntilChanged()
     ).subscribe(query => {
-      this.movieService.searchMovies(query);
+      if (query) this.movieService.searchMovies(query.trim(), 1);
     });
   }
 
-  onSearch(event: any): void {
-    this.searchSubject.next(event.target.value.trim());
-  }
 }

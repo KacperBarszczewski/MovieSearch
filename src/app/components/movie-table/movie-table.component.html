@@ -24,8 +24,8 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
 
-<mat-paginator class="!bg-custom-topography mt-4" [length]="numberMoves" [pageSize]="10"
-    (page)="pageChanged($event)">
+<mat-paginator class="!bg-custom-topography mt-4" [length]="(movieState$ | async)?.numberOfMovies" [pageSize]="10"
+    [pageIndex]="((movieState$ | async)?.pageIndex??1) - 1" (page)="pageChanged($event)">
 </mat-paginator>
 
 <style>

@@ -3,43 +3,50 @@ import { Injectable } from '@angular/core';
 import { Movie } from '../models/movie';
 import { MovieSearchResponse } from '../models/movieSearchResponse';
 import { BehaviorSubject, finalize, forkJoin, map, switchMap } from 'rxjs';
+import { MovieState } from '../models/movieState';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MovieService {
   private apiUrl = 'http://omdbapi.com/';
-  private apiKey = 'd93c68b3';
+  private apiKey = '7f6f0b31';
 
-  private loadingSubject = new BehaviorSubject<boolean>(false);
-  loading$ = this.loadingSubject.asObservable();
+  private movieStateSubject = new BehaviorSubject<MovieState>({
+    loading: false,
+    movies: [],
+    numberOfMovies: 0,
+    query: '',
+    pageIndex: 1
+  });
 
-  private moviesSubject = new BehaviorSubject<Movie[]>([]);
-  movies$ = this.moviesSubject.asObservable();
-
-  private numberMovesSubject = new BehaviorSubject<number>(0);
-  numberMoves$ = this.numberMovesSubject.asObservable();
+  movieState$ = this.movieStateSubject.asObservable();
 
   constructor(private http: HttpClient) { }
 
-  searchMovies(query: string): void {
+  searchMovies(query: string, page: number = 1): void {
     if (!query) return;
 
-    this.loadingSubject.next(true);
-    this.http.get<MovieSearchResponse>(`${this.apiUrl}?s=${query}&apikey=${this.apiKey}`).pipe(
-      map(response =>{
-        this.numberMovesSubject.next(parseInt(response.totalResults));
+    this.movieStateSubject.next({
+      ...this.movieStateSubject.value,
+      loading: true,
+      query,
+      pageIndex: page
+    });
+
+    this.http.get<MovieSearchResponse>(`${this.apiUrl}?s=${query}&apikey=${this.apiKey}&page=${page}`).pipe(
+      map(response => {
+        this.movieStateSubject.next({...this.movieStateSubject.value, numberOfMovies: parseInt(response.totalResults)});
         return response.Search || []
-      } ),
+      }),
       switchMap(movies => {
-        console.log(movies);
         const detailsRequests = movies.map(movie =>
           this.http.get<Movie>(`${this.apiUrl}?i=${movie.imdbID}&plot=full&apikey=${this.apiKey}`)
         );
         return forkJoin(detailsRequests);
       }),
-      finalize(() => this.loadingSubject.next(false))
-    ).subscribe(movies => this.moviesSubject.next(movies));
+      finalize(() =>  this.movieStateSubject.next({...this.movieStateSubject.value,loading: false}))
+    ).subscribe(movies => this.movieStateSubject.next({...this.movieStateSubject.value,movies}));
   }
 
 }
