@@ -53,9 +53,13 @@ export class MovieService {
       },
       error: (err) => {
         console.error(err);
-      },
+      },});
+  }
 
-    });
+
+  //to tests
+  updateMovieState(newState: MovieState): void {
+    this.movieStateSubject.next(newState);
   }
 
 }

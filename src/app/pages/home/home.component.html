@@ -17,7 +17,7 @@
             </div>
             }
 
-            @if( !((movieState$ | async)?.loading || (movieState$ | async)?.numberOfMovies === 0)) {
+            @if( (!((movieState$ | async)?.loading) && !((movieState$ | async)?.numberOfMovies === 0))) {
             <app-movie-table></app-movie-table>
             }
 
