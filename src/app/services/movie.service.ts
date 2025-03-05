@@ -4,13 +4,14 @@ import { Movie } from '../models/movie';
 import { MovieSearchResponse } from '../models/movieSearchResponse';
 import { BehaviorSubject, finalize, forkJoin, map, switchMap } from 'rxjs';
 import { MovieState } from '../models/movieState';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MovieService {
-  private apiUrl = 'http://omdbapi.com/';
-  private apiKey = '7f6f0b31';
+  private apiUrl = environment.apiUrl;
+  private apiKey = environment.apiKey;
 
   private movieStateSubject = new BehaviorSubject<MovieState>({
     loading: false,
